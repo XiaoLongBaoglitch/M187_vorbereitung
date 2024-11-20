@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prüfungsfragen mit Multiple Choice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        button {
+            margin: 20px 0;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .score {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Randomisierte Prüfungsfragen</h1>
+    <p>Wählen Sie die richtige Antwort aus und klicken Sie auf "Punktzahl berechnen", um Ihre Leistung zu sehen:</p>
+    <button onclick="generateQuestions()">Fragen neu mischen</button>
+    <form id="quizForm" onsubmit="calculateScore(event)">
+        <div id="questions"></div>
+        <button type="submit">Punktzahl berechnen</button>
+    </form>
+    <div id="score" class="score"></div>
+
+    <script>
+        const questions = [
+            {
+                question: "Welche Schritte gehören zur Anforderungsanalyse eines neuen PCs?",
+                choices: ["Kundenanforderungen sammeln", "Hardware vergleichen", "Direkt kaufen", "Zufällige Komponenten wählen"],
+                answer: 0
+            },
+            {
+                question: "Welche Vorteile hat eine SSD im Vergleich zu einer HDD?",
+                choices: ["Schneller", "Billiger", "Lebensdauer länger", "Kein Vorteil"],
+                answer: 0
+            },
+            {
+                question: "Was ist schneller: M.2 oder SATA?",
+                choices: ["M.2", "SATA", "Gleich schnell", "Keine der beiden"],
+                answer: 0
+            },
+            {
+                question: "Warum ist Staub gefährlich für die Hardware?",
+                choices: ["Verstopft Lüfter", "Keine Auswirkungen", "Reduziert Stromverbrauch", "Erhöht die Lebensdauer"],
+                answer: 0
+            },
+            {
+                question: "Was unterscheidet QLC von SLC-Speichern?",
+                choices: ["Lebensdauer", "Farbe", "Kein Unterschied", "Energieverbrauch"],
+                answer: 0
+            },
+            {
+                question: "Was ist die maximale Leistung, die über USB Power Delivery geliefert werden kann?",
+                choices: ["100 Watt", "50 Watt", "75 Watt", "200 Watt"],
+                answer: 0
+            },
+            {
+                question: "Welche Funktion hat BitLocker?",
+                choices: ["Verschlüsselung", "Backup", "Firewall", "Treiberaktualisierung"],
+                answer: 0
+            },
+            {
+                question: "Was bedeutet 'Open Source'?",
+                choices: ["Quelloffen", "Proprietär", "Bezahlsoftware", "Windows-exklusiv"],
+                answer: 0
+            },
+            {
+                question: "Welche Videoanschlüsse unterstützen 4K?",
+                choices: ["HDMI", "VGA", "RJ45", "Ethernet"],
+                answer: 0
+            },
+            {
+                question: "Was bedeutet 'Abwärtskompatibilität' bei USB?",
+                choices: ["Ältere Geräte funktionieren", "Nur neue Geräte funktionieren", "Kein Unterschied", "Höhere Geschwindigkeit"],
+                answer: 0
+            }
+        ];
+
+        function generateQuestions() {
+            const shuffledQuestions = questions.sort(() => Math.random() - 0.5).slice(0, 20);
+            const questionsContainer = document.getElementById("questions");
+            questionsContainer.innerHTML = shuffledQuestions.map((q, index) => `
+                <div class="question">
+                    <p>${index + 1}. ${q.question}</p>
+                    ${q.choices.map((choice, i) => `
+                        <label>
+                            <input type="radio" name="question${index}" value="${i}">
+                            ${choice}
+                        </label><br>
+                    `).join("")}
+                </div>
+            `).join("");
+        }
+
+        function calculateScore(event) {
+            event.preventDefault();
+            const form = document.getElementById("quizForm");
+            const formData = new FormData(form);
+            let score = 0;
+
+            questions.forEach((q, index) => {
+                const userAnswer = formData.get(`question${index}`);
+                if (userAnswer && parseInt(userAnswer) === q.answer) {
+                    score++;
+                }
+            });
+
+            const total = questions.length;
+            document.getElementById("score").innerText = `Sie haben ${score} von ${total} Punkten erreicht.`;
+        }
+
+        // Initiales Laden der Fragen
+        generateQuestions();
+    </script>
+</body>
+</html>
